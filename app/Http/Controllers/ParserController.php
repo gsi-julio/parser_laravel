@@ -21,8 +21,15 @@ class ParserController extends Controller
     {
         //$file_name = 'C:/Users/Julio/Documents/theWinningNumber.xml';
         $file_name = 'http://www.flalottery.com/video/en/theWinningNumber.xml';
+
+        echo("Archivo: ".$file_name);
+        echo(" </br> ");
+
         $html = HtmlDomParser::file_get_html($file_name);
         $htmlCode = $html->find('item[game=pick3]');
+
+        echo("Code: ".$htmlCode[0]->plaintext);
+        echo(" </br> ");
 
         $dias_semana_esp = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
         $meses_esp = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -95,15 +102,29 @@ class ParserController extends Controller
                 $noche_centena = '-';
             }
 
+            echo("Fecha Hoy: ".$fechaTodayFinal);
+            echo(" </br> ");
+            echo("Mediodía Centena: ".$mediodia_centena);
+            echo(" </br> ");
+            echo("Mediodía Fijo: ".$mediodia_fijo);
+            echo(" </br> ");
+            echo("Noche Centena: ".$noche_centena);
+            echo(" </br> ");
+            echo("Noche Fijo: ".$noche_fijo);
+            echo(" </br> ");
+
             if ($mediodia_centena != '-' && $noche_centena == '-') {
+                echo("Sending email..."); echo(" </br> ");
                 Mail::to($to)->send(new SendNumberMail($mediodia_centena, $mediodia_fijo, $noche_centena, $noche_fijo, $fechaTodayFinal));
                 $this->insertChecked($fechaDB, 'M');
             }
             if ($mediodia_centena == '-' && $noche_centena != '-') {
+                echo("Sending email..."); echo(" </br> ");
                 Mail::to($to)->send(new SendNumberMail($mediodia_centena, $mediodia_fijo, $noche_centena, $noche_fijo, $fechaTodayFinal));
                 $this->insertChecked($fechaDB, 'N');
             }
             if ($mediodia_centena != '-' && $noche_centena != '-') {
+                echo("Sending email..."); echo(" </br> ");
                 Mail::to($to)->send(new SendNumberMail($mediodia_centena, $mediodia_fijo, $noche_centena, $noche_fijo, $fechaTodayFinal));
                 $this->insertChecked($fechaDB, 'M');
                 $this->insertChecked($fechaDB, 'N');
@@ -115,6 +136,7 @@ class ParserController extends Controller
 
             if (!$checkedMediodia) {
                 $noche_centena  = '-';
+                echo("Sending email..."); echo(" </br> ");
                 Mail::to($to)->send(new SendNumberMail($mediodia_centena, $mediodia_fijo, $noche_centena, $noche_fijo, $fechaTodayFinal));
                 $this->insertChecked($fechaDB, 'M');
             }
@@ -125,6 +147,7 @@ class ParserController extends Controller
 
             if (!$checkedNoche) {
                 $mediodia_centena = '-';
+                echo("Sending email..."); echo(" </br> ");
                 Mail::to($to)->send(new SendNumberMail($mediodia_centena, $mediodia_fijo, $noche_centena, $noche_fijo, $fechaTodayFinal));
                 $this->insertChecked($fechaDB, 'N');
             }
