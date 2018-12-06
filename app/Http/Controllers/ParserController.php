@@ -20,15 +20,20 @@ class ParserController extends Controller
     public function sendNumber()
     {
         //$file_name = 'C:/Users/Julio/Documents/theWinningNumber.xml';
-        $file_name = 'http://www.flalottery.com/video/en/theWinningNumber.xml';
+        //$file_name = 'http://www.flalottery.com/video/en/theWinningNumber.xml';
+        $file_name = "http://www.flalottery.com/video/en/theWinningNumber.xml";
 
         echo("Archivo: ".$file_name);
         echo(" </br> ");
+        echo(" </br> ");
 
         $html = HtmlDomParser::file_get_html($file_name);
+        //$html = HtmlDomParser::file_get_html($file_name, false, null, 0);
+
         $htmlCode = $html->find('item[game=pick3]');
 
         echo("Code: ".$htmlCode[0]->plaintext);
+        echo(" </br> ");
         echo(" </br> ");
 
         $dias_semana_esp = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
@@ -81,6 +86,10 @@ class ParserController extends Controller
         $today_anno = $fechaToday->year;
 
         $fechaTodayFinal = $fechaTodayFinal.$today_dia_semana.", ".$today_dia." de ".$today_mes." de ".$today_anno;
+
+        echo("Fecha Hoy: ".$fechaTodayFinal);
+        echo(" </br> ");
+        echo(" </br> ");
 
         if ($today_dia < 10) {
             $today_dia = '0'.$today_dia;
